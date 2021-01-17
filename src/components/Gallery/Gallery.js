@@ -66,7 +66,6 @@ class Gallery extends React.Component {
 
 
   render() {
-    console.log(this.state.images);
     return (
       <div className="gallery-root">
         {this.state.images.map(dto => {
