@@ -16,7 +16,8 @@ class Image extends React.Component {
     this.state = {
       size: 200,
       openModal: false,
-      imageRotation: 0
+      imageRotation: 0,
+      buttonsRotation: 0
     };
   }
 
@@ -50,11 +51,8 @@ class Image extends React.Component {
   }
 
   handleFlipButton = () => {
-    const rotationDeg = 90;
-    if (this.state.imageRotation === 270)
-      this.setState({ imageRotation: 0 })
-    else
-      this.setState({ imageRotation: this.state.imageRotation + rotationDeg })
+    this.setState({ imageRotation: (this.state.imageRotation + 90) % 360 })
+    this.setState({ buttonsRotation: (this.state.buttonsRotation - 90) % 360 })
 
   }
 
@@ -73,9 +71,13 @@ class Image extends React.Component {
         }
         }
       >
-        <div>
+        <div
+          style={{
+            transform: `rotate(${this.state.buttonsRotation}deg)`
+          }
+          }>
           <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.handleFlipButton} />
-          <FontAwesome className="image-icon" name="trash-alt" title="delete" />
+          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.onDelete(this.props.dto)} />
           <FontAwesome className="image-icon" name="expand" title="expand" onClick={this.handleExpandClick} />
         </div>
         <ImageModal isOpen={this.state.openModal} onClose={this.handleModalClose} onRequestClose={this.handleRequestModalClose} imgUrl={this.urlFromDto(this.props.dto)} title={this.props.dto.title} />

@@ -17,7 +17,7 @@ class Gallery extends React.Component {
     };
   }
 
-  getGalleryWidth(){
+  getGalleryWidth() {
     try {
       return document.body.clientWidth;
     } catch (e) {
@@ -40,7 +40,7 @@ class Gallery extends React.Component {
           res.photos.photo &&
           res.photos.photo.length > 0
         ) {
-          this.setState({images: res.photos.photo});
+          this.setState({ images: res.photos.photo });
         }
       });
   }
@@ -56,11 +56,21 @@ class Gallery extends React.Component {
     this.getImages(props.tag);
   }
 
+  handleDelete = (dto) => {
+    console.log(dto);
+    // const imagesList = [...this.state.images]
+    // const deletedImageList = imagesList.splice(index, 1)
+    // this.setState({ images: deletedImageList })
+  }
+
+
+
   render() {
+    console.log(this.state.images);
     return (
       <div className="gallery-root">
         {this.state.images.map(dto => {
-          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth}/>;
+          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth} onDelete={this.handleDelete} />;
         })}
       </div>
     );
