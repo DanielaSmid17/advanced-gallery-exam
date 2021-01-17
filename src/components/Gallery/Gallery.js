@@ -57,10 +57,10 @@ class Gallery extends React.Component {
   }
 
   handleDelete = (dto) => {
-    console.log(dto);
-    // const imagesList = [...this.state.images]
-    // const deletedImageList = imagesList.splice(index, 1)
-    // this.setState({ images: deletedImageList })
+    const imagesList = [...this.state.images]
+    const index = imagesList.indexOf(dto)
+    imagesList.splice(index, 1)
+    this.setState({ images: imagesList })
   }
 
 
