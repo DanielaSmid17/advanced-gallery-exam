@@ -1,12 +1,17 @@
-.title-close{
+.close-btn{
     display: flex;
+    color: white
+}
+
+.title{
+    color: white
 }
 
 .modal {
     padding: .5rem;
     width: 60%;
     height: 85%;
-    background-color: white;
+    background-color: black;
     margin-left: 20%;
     margin-top: 3%;
 }

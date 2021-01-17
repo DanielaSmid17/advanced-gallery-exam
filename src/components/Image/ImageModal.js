@@ -10,11 +10,11 @@ export default class ImageModal extends React.Component {
 
         return (
             <Modal className='modal' isOpen={isOpen} onRequestClose={onRequestClose} >
-                <div className='title-close'>
+                <div className='close-btn'>
                     <i className="fa fa-times" aria-hidden="true" onClick={onClose}></i>
                 </div>
                 <div className='img'>
-                    <h3>{title}</h3>
+                    <h3 className='title'>{title}</h3>
                     <img src={imgUrl} />
                 </div>
             </Modal>
