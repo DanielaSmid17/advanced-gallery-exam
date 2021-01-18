@@ -13,7 +13,8 @@ class Gallery extends React.Component {
     super(props);
     this.state = {
       images: [],
-      galleryWidth: this.getGalleryWidth()
+      galleryWidth: this.getGalleryWidth(),
+      page: 1,
     };
   }
 
@@ -24,13 +25,14 @@ class Gallery extends React.Component {
       return 1000;
     }
   }
-  getImages(tag) {
-    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=100&format=json&nojsoncallback=1`;
+
+  getImages(page = 1) {
+    const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${this.props.tag}&tag_mode=any&per_page=100&page=${page}&format=json&nojsoncallback=1`;
     const baseUrl = 'https://api.flickr.com/';
     axios({
       url: getImagesUrl,
       baseURL: baseUrl,
-      method: 'GET'
+      method: 'GET',
     })
       .then(res => res.data)
       .then(res => {
@@ -40,13 +42,14 @@ class Gallery extends React.Component {
           res.photos.photo &&
           res.photos.photo.length > 0
         ) {
-          this.setState({ images: res.photos.photo });
+          const renderedImages = [...this.state.images, ...res.photos.photo]
+          this.setState({ images: renderedImages });
         }
       });
   }
 
   componentDidMount() {
-    this.getImages(this.props.tag);
+    this.getImages();
     this.setState({
       galleryWidth: document.body.clientWidth
     });
@@ -63,13 +66,33 @@ class Gallery extends React.Component {
     this.setState({ images: imagesList })
   }
 
+  scrollListener = () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+      const newPage = this.state.page + 1
+      this.getImages(newPage)
+      this.setState({ page: newPage })
+      // Show loading spinner and make fetch request to api
+    }
+  }
 
+  componentWillMount() {
+    window.addEventListener('scroll', this.scrollListener);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.scrollListener);
+  }
 
   render() {
     return (
-      <div className="gallery-root">
+      <div className="gallery-root" id='gallery'>
         {this.state.images.map(dto => {
-          return <Image key={'image-' + dto.id} dto={dto} galleryWidth={this.state.galleryWidth} onDelete={this.handleDelete} />;
+          return <Image
+            key={'image-' + dto.id}
+            dto={dto}
+            galleryWidth={this.state.galleryWidth}
+            onDelete={this.handleDelete}
+          />;
         })}
       </div>
     );

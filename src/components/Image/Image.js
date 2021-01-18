@@ -56,11 +56,31 @@ class Image extends React.Component {
 
   }
 
+  // dragStart = (e) => {
+  //   const target = e.target
+  //   e.dataTransfer.setData('image_id', target.id)
+  //   setTimeout(() => {
+  //     target.style.display = 'none'
+  //   }, 0)
+  // }
+
+  // dragOver = (e) => {
+  //   e.stopPropagation();
+  // }
+
+
+
 
   render() {
     return (
       <div
+        // id={this.props.id}
         className='image-root'
+        // className={`image-root ${this.props.className}`}
+        // draggable='true'
+        // onDragStart={this.dragStart}
+        // onDragOver={this.dragOver}
+        // onDragOver={this.props.onDragOver}
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
