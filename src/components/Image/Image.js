@@ -49,7 +49,8 @@ class Image extends React.Component {
           transform: `rotate(${this.state.imageRotation}deg)`,
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.props.size + 'px',
-          height: this.props.size + 'px'
+          height: this.props.size + 'px',
+          justifyItems: 'center'
 
         }
         }

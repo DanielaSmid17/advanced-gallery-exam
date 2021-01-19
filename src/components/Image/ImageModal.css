@@ -4,19 +4,27 @@
 }
 
 .title{
-    color: white
+    color: white;
+    /* margin-left: 50%    */
 }
 
 .modal {
     padding: .5rem;
-    width: 60%;
-    height: 85%;
+    width: 600px;
+    height: 400px;
     background-color: black;
-    margin-left: 20%;
+    margin-left: 30%;
     margin-top: 3%;
+    justify-items: center
 }
 
 .img{
-    margin-left: 20%;
+    max-width: 500px;
+    max-height: 300px;
+    /* margin-left: 20%; */
     justify-items: center;
+}
+
+.modal-content{
+    margin-left: 5%;
 }
