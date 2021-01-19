@@ -19,27 +19,19 @@ class Gallery extends React.Component {
     };
   } 
 
-  getImages(tag, page = 1) {
+  getImages(tag, page = 1, replace=true) {
     const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=100&page=${page}&format=json&nojsoncallback=1`;
     const baseUrl = 'https://api.flickr.com/';
-    axios({
-      url: getImagesUrl,
-      baseURL: baseUrl,
-      method: 'GET',
-    })
+    axios({url: getImagesUrl, baseURL: baseUrl, method: 'GET'})
       .then(res => res.data)
       .then(res => {
-        if (
-          res &&
-          res.photos &&
-          res.photos.photo &&
-          res.photos.photo.length > 0
-        ) {
-          const renderedImages = [...this.state.images, ...res.photos.photo]
-          this.setState({ images: renderedImages, totalPhotos: res.photos.total });
+        if (res && res.photos && res.photos.photo && res.photos.photo.length > 0) {
+          const images = replace ? res.photos.photo : [...this.state.images, ...res.photos.photo]
+          this.setState({ images, totalPhotos: res.photos.total });
         }
       });
   }
+
 
    calcImageSize() {
     const galleryWidth = window.innerWidth - 20;
@@ -68,7 +60,7 @@ class Gallery extends React.Component {
   scrollListener = () => {
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       const newPage = this.state.page + 1
-      this.getImages(this.props.tag, newPage)
+      this.getImages(this.props.tag, newPage, false)
       this.setState({ page: newPage })
       // Show loading spinner and make fetch request to api
     }
@@ -91,6 +83,7 @@ class Gallery extends React.Component {
 
 
   render() {
+    console.log(this.state.images.length, this.state.totalPhotos);
     return (
       <div className="gallery-root" id='gallery' >
         {
@@ -103,7 +96,11 @@ class Gallery extends React.Component {
             />;
           })
         }
-        {(this.state.totalPhotos < 0 && this.state.images.length === this.state.totalPhotos) && <h6>You've reached the end of this search!</h6>}
+        {
+          (this.state.totalPhotos > 0 
+          && (this.state.images.length == this.state.totalPhotos)) 
+          && <h4>You've reached the end of the {this.props.tag} search!</h4>
+        }
       </div>
     );
   }
