@@ -12,28 +12,13 @@ class Image extends React.Component {
 
   constructor(props) {
     super(props);
-    this.calcImageSize = this.calcImageSize.bind(this);
     this.state = {
-      size: 200,
       openModal: false,
       imageRotation: 0,
       buttonsRotation: 0
     };
   }
 
-  calcImageSize() {
-    const { galleryWidth } = this.props;
-    const targetSize = 200;
-    const imagesPerRow = Math.round(galleryWidth / targetSize);
-    const size = (galleryWidth / imagesPerRow);
-    this.setState({
-      size
-    });
-  }
-
-  componentDidMount() {
-    this.calcImageSize();
-  }
 
   urlFromDto(dto) {
     return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
@@ -56,37 +41,15 @@ class Image extends React.Component {
 
   }
 
-  // dragStart = (e) => {
-  //   const target = e.target
-  //   e.dataTransfer.setData('image_id', target.id)
-  //   setTimeout(() => {
-  //     target.style.display = 'none'
-  //   }, 0)
-  // }
-
-  // dragOver = (e) => {
-  //   e.stopPropagation();
-  // }
-
-
-
-
   render() {
     return (
       <div
-        // id={this.props.id}
         className='image-root'
-        // className={`image-root ${this.props.className}`}
-        // draggable='true'
-        // onDragStart={this.dragStart}
-        // onDragOver={this.dragOver}
-        // onDragOver={this.props.onDragOver}
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
-          width: this.state.size + 'px',
-          height: this.state.size + 'px'
-
+          width: this.props.size + 'px',
+          height: this.props.size + 'px'
 
         }
         }
