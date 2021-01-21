@@ -45,17 +45,10 @@ class Image extends React.Component {
     this.props.onGalleryDrag(initialPosition)
   }
 
-  handleDragOver = (e) => {
-    e.preventDefault();
+  handleDragEnter = (e) => {
     const currentPosition = Number(e.currentTarget.dataset.position)
-    this.props.onGalleryDragOver(currentPosition)
+    this.props.onGalleryDragEnter(currentPosition)
   }
-
-  handleDrop = (e) => {
-    const lastPosition = Number(e.currentTarget.dataset.position)
-    this.props.onGalleryDrop(lastPosition)
-  }
-
 
   render() {
     return (
@@ -63,8 +56,8 @@ class Image extends React.Component {
         data-position={this.props.index}
         draggable="true"
         onDragStart={this.handleDragStart}
-        onDragOver={this.handleDragOver}
-        onDrop={this.handleDrop}
+        onDragEnter={this.handleDragEnter}
+        onDragOver={(e) => e.preventDefault()}
         className='image-root'
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,

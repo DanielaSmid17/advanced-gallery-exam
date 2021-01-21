@@ -17,8 +17,7 @@ class Gallery extends React.Component {
       totalPhotos: 0,
       imageSize: 200,
       draggedImage: {},
-      draggedImageIndex: null,
-      dragOverIndex: null
+      dragEnterIndex: null
     };
   }
 
@@ -82,30 +81,20 @@ class Gallery extends React.Component {
     window.removeEventListener('resize', this.resizeListener)
   }
 
-
-  handleGalleryDrag = (dragIndex) => {
-    const draggedImage = { ...this.state.images[dragIndex] }
-    this.setState({ draggedImage, draggedImageIndex: dragIndex, dragOverIndex: dragIndex })
+  handleGalleryDrag = (dragEnterIndex) => {
+    const draggedImage = { ...this.state.images[dragEnterIndex] }
+    this.setState({ draggedImage, dragEnterIndex })
   }
 
-  handleGalleryDragOver = (currentDragOverIndex) => {
-    const { images, dragOverIndex } = this.state
-    if (dragOverIndex !== currentDragOverIndex) {
+  handleGalleryDragEnter = (currentDragEnterIndex) => {
+    const { images, dragEnterIndex, draggedImage } = this.state
+    if (dragEnterIndex !== currentDragEnterIndex) {
       const imagesCopy = [...images]
-      imagesCopy[dragOverIndex] = images[currentDragOverIndex];
-      imagesCopy[currentDragOverIndex] = images[dragOverIndex];
-      this.setState({ images: imagesCopy })
+      imagesCopy.splice(dragEnterIndex, 1)
+      imagesCopy.splice(currentDragEnterIndex, 0, draggedImage)
+      this.setState({ images: imagesCopy, dragEnterIndex: currentDragEnterIndex })
     }
-    this.setState({ dragOverIndex: currentDragOverIndex })
   }
-
-  handleGalleryDrop = (dropIndex) => {
-    // const imagesCopy = [...this.state.images]
-    // imagesCopy.splice(this.state.draggedImageIndex, 1);
-    // imagesCopy.splice(dropIndex, 0, this.state.draggedImage);
-    // this.setState({ images: imagesCopy, draggedImage: {} })
-  }
-
 
   render() {
     return (
@@ -114,8 +103,7 @@ class Gallery extends React.Component {
           this.state.images.map((dto, index) => {
             return <Image
               onGalleryDrag={this.handleGalleryDrag}
-              onGalleryDragOver={this.handleGalleryDragOver}
-              onGalleryDrop={this.handleGalleryDrop}
+              onGalleryDragEnter={this.handleGalleryDragEnter}
               index={index}
               key={'image-' + dto.id + index}
               dto={dto}
