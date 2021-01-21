@@ -17,7 +17,8 @@ class Gallery extends React.Component {
       totalPhotos: 0,
       imageSize: 200,
       draggedImage: {},
-      draggedImageIndex: ''
+      draggedImageIndex: null,
+      dragOverIndex: null
     };
   }
 
@@ -81,16 +82,28 @@ class Gallery extends React.Component {
     window.removeEventListener('resize', this.resizeListener)
   }
 
-  handleGalleryDrag = (index) => {
-    const draggedImage = { ...this.state.images[index] }
-    this.setState({ draggedImage, draggedImageIndex: index })
+
+  handleGalleryDrag = (dragIndex) => {
+    const draggedImage = { ...this.state.images[dragIndex] }
+    this.setState({ draggedImage, draggedImageIndex: dragIndex, dragOverIndex: dragIndex })
+  }
+
+  handleGalleryDragOver = (currentDragOverIndex) => {
+    const { images, dragOverIndex } = this.state
+    if (dragOverIndex !== currentDragOverIndex) {
+      const imagesCopy = [...images]
+      imagesCopy[dragOverIndex] = images[currentDragOverIndex];
+      imagesCopy[currentDragOverIndex] = images[dragOverIndex];
+      this.setState({ images: imagesCopy })
+    }
+    this.setState({ dragOverIndex: currentDragOverIndex })
   }
 
   handleGalleryDrop = (dropIndex) => {
-    const imagesCopy = [...this.state.images]
-    imagesCopy.splice(this.state.draggedImageIndex, 1);
-    imagesCopy.splice(dropIndex, 0, this.state.draggedImage);
-    this.setState({ images: imagesCopy, draggedImage: {} })
+    // const imagesCopy = [...this.state.images]
+    // imagesCopy.splice(this.state.draggedImageIndex, 1);
+    // imagesCopy.splice(dropIndex, 0, this.state.draggedImage);
+    // this.setState({ images: imagesCopy, draggedImage: {} })
   }
 
 
@@ -100,8 +113,9 @@ class Gallery extends React.Component {
         {
           this.state.images.map((dto, index) => {
             return <Image
-              onGalleryDrop={this.handleGalleryDrop}
               onGalleryDrag={this.handleGalleryDrag}
+              onGalleryDragOver={this.handleGalleryDragOver}
+              onGalleryDrop={this.handleGalleryDrop}
               index={index}
               key={'image-' + dto.id + index}
               dto={dto}
