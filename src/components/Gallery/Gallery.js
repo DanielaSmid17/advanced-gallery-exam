@@ -15,14 +15,16 @@ class Gallery extends React.Component {
       images: [],
       page: 1,
       totalPhotos: 0,
-      imageSize: 200
+      imageSize: 200,
+      draggedImage: {},
+      draggedImageIndex: ''
     };
-  } 
+  }
 
-  getImages(tag, page = 1, replace=true) {
+  getImages(tag, page = 1, replace = true) {
     const getImagesUrl = `services/rest/?method=flickr.photos.search&api_key=522c1f9009ca3609bcbaf08545f067ad&tags=${tag}&tag_mode=any&per_page=100&page=${page}&format=json&nojsoncallback=1`;
     const baseUrl = 'https://api.flickr.com/';
-    axios({url: getImagesUrl, baseURL: baseUrl, method: 'GET'})
+    axios({ url: getImagesUrl, baseURL: baseUrl, method: 'GET' })
       .then(res => res.data)
       .then(res => {
         if (res && res.photos && res.photos.photo && res.photos.photo.length > 0) {
@@ -32,8 +34,7 @@ class Gallery extends React.Component {
       });
   }
 
-
-   calcImageSize() {
+  calcImageSize() {
     const galleryWidth = window.innerWidth - 20;
     const targetSize = 200;
     const imagesPerRow = Math.floor(galleryWidth / targetSize);
@@ -62,10 +63,10 @@ class Gallery extends React.Component {
       const newPage = this.state.page + 1
       this.getImages(this.props.tag, newPage, false)
       this.setState({ page: newPage })
-      // Show loading spinner and make fetch request to api
+      // Show loading spinner
     }
   }
- 
+
   resizeListener = () => {
     this.calcImageSize()
   }
@@ -80,15 +81,28 @@ class Gallery extends React.Component {
     window.removeEventListener('resize', this.resizeListener)
   }
 
+  handleGalleryDrag = (index) => {
+    const draggedImage = { ...this.state.images[index] }
+    this.setState({ draggedImage, draggedImageIndex: index })
+  }
+
+  handleGalleryDrop = (dropIndex) => {
+    const imagesCopy = [...this.state.images]
+    imagesCopy.splice(this.state.draggedImageIndex, 1);
+    imagesCopy.splice(dropIndex, 0, this.state.draggedImage);
+    this.setState({ images: imagesCopy, draggedImage: {} })
+  }
 
 
   render() {
-    console.log(this.state.images.length, this.state.totalPhotos);
     return (
       <div className="gallery-root" id='gallery' >
         {
           this.state.images.map((dto, index) => {
             return <Image
+              onGalleryDrop={this.handleGalleryDrop}
+              onGalleryDrag={this.handleGalleryDrag}
+              index={index}
               key={'image-' + dto.id + index}
               dto={dto}
               onDelete={this.handleDelete}
@@ -97,8 +111,8 @@ class Gallery extends React.Component {
           })
         }
         {
-          (this.state.totalPhotos > 0 
-          && (this.state.images.length == this.state.totalPhotos)) 
+          (this.state.totalPhotos > 0
+            && (this.state.images.length == this.state.totalPhotos))
           && <h4>You've reached the end of the {this.props.tag} search!</h4>
         }
       </div>
