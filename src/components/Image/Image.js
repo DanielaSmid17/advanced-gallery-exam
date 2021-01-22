@@ -16,6 +16,7 @@ class Image extends React.Component {
       openModal: false,
       imageRotation: 0,
       buttonsRotation: 0,
+      borderColor: '#FFFFFF'
     };
   }
 
@@ -43,13 +44,18 @@ class Image extends React.Component {
   handleDragStart = (e) => {
     const initialPosition = Number(e.currentTarget.dataset.position)
     this.props.onGalleryDrag(initialPosition)
-
+    this.setState({ borderColor: "#F7F700" })
   }
 
   handleDragEnter = (e) => {
     const currentPosition = Number(e.currentTarget.dataset.position)
     this.props.onGalleryDragEnter(currentPosition)
     console.log('after', this.state.imageClassName);
+  }
+
+  handleDrop = (e) => {
+    this.props.onDrop()
+    this.setState({ borderColor: "#FFFFFF" })
   }
 
 
@@ -62,14 +68,14 @@ class Image extends React.Component {
         onDragEnter={this.handleDragEnter}
         onDragOver={(e) => e.preventDefault()}
         className={this.props.disableHover ? 'image-dragged' : 'image-root'}
-        onDrop={this.props.onDrop}
+        onDrop={this.handleDrop}
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.props.size + 'px',
           height: this.props.size + 'px',
           justifyItems: 'center',
-
+          border: `1px solid ${this.state.borderColor}`
         }}
       >
         <div style={{ transform: `rotate(${this.state.buttonsRotation}deg)` }}>
