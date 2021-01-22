@@ -17,7 +17,8 @@ class Gallery extends React.Component {
       totalPhotos: 0,
       imageSize: 200,
       draggedImage: {},
-      dragEnterIndex: null
+      dragEnterIndex: null,
+      disableHover: false
     };
   }
 
@@ -83,7 +84,7 @@ class Gallery extends React.Component {
 
   handleGalleryDrag = (dragEnterIndex) => {
     const draggedImage = { ...this.state.images[dragEnterIndex] }
-    this.setState({ draggedImage, dragEnterIndex })
+    this.setState({ draggedImage, dragEnterIndex, disableHover: true })
   }
 
   handleGalleryDragEnter = (currentDragEnterIndex) => {
@@ -96,12 +97,15 @@ class Gallery extends React.Component {
     }
   }
 
+
   render() {
     return (
       <div className="gallery-root" id='gallery' >
         {
           this.state.images.map((dto, index) => {
             return <Image
+              onDrop={() => this.setState({ disableHover: false })}
+              disableHover={this.state.disableHover}
               onGalleryDrag={this.handleGalleryDrag}
               onGalleryDragEnter={this.handleGalleryDragEnter}
               index={index}

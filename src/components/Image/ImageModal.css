@@ -19,10 +19,10 @@
 
 .img{
     max-width: 500px;
-    max-height: 3g00px;
+    max-height: 300px;
     justify-items: center;
 }
 
 .modal-content{
-    margin-left: 5%;
+    margin-left: 10%;
 }

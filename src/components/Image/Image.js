@@ -43,12 +43,15 @@ class Image extends React.Component {
   handleDragStart = (e) => {
     const initialPosition = Number(e.currentTarget.dataset.position)
     this.props.onGalleryDrag(initialPosition)
+
   }
 
   handleDragEnter = (e) => {
     const currentPosition = Number(e.currentTarget.dataset.position)
     this.props.onGalleryDragEnter(currentPosition)
+    console.log('after', this.state.imageClassName);
   }
+
 
   render() {
     return (
@@ -58,13 +61,15 @@ class Image extends React.Component {
         onDragStart={this.handleDragStart}
         onDragEnter={this.handleDragEnter}
         onDragOver={(e) => e.preventDefault()}
-        className='image-root'
+        className={this.props.disableHover ? 'image-dragged' : 'image-root'}
+        onDrop={this.props.onDrop}
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,
           backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
           width: this.props.size + 'px',
           height: this.props.size + 'px',
-          justifyItems: 'center'
+          justifyItems: 'center',
+
         }}
       >
         <div style={{ transform: `rotate(${this.state.buttonsRotation}deg)` }}>
