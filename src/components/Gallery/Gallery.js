@@ -117,6 +117,7 @@ class Gallery extends React.Component {
     }
   }
 
+
   render() {
     return (
       <div className="gallery-root" id='gallery' >
@@ -124,6 +125,8 @@ class Gallery extends React.Component {
           <div className='favorites-gallery'>
             <h3>< FontAwesome name="heart" /> Your Favorite Pictures</h3>
             {this.state.favoriteImages.map((dto, index) => {
+              const url = `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`
+
               return <Image
                 isInFavoritesList
                 removeFromFavoritesList={this.removeFromFavoritesList}
@@ -137,6 +140,7 @@ class Gallery extends React.Component {
                 dto={dto}
                 onDelete={this.handleDelete}
                 size={this.state.imageSize}
+                url={url}
               />
             })}
           </div>
@@ -144,19 +148,24 @@ class Gallery extends React.Component {
         <h3>Main Gallery</h3>
         {
           this.state.images.map((dto, index) => {
-            return <Image
-              removeFromFavoritesList={this.removeFromFavoritesList}
-              addToFavoritesList={this.addToFavoritesList}
-              onDrop={() => this.setState({ disableHover: false })}
-              disableHover={this.state.disableHover}
-              onGalleryDrag={this.handleGalleryDrag}
-              onGalleryDragEnter={this.handleGalleryDragEnter}
-              index={index}
-              key={'image-' + dto.id + index}
-              dto={dto}
-              onDelete={this.handleDelete}
-              size={this.state.imageSize}
-            />;
+            const url = `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`
+
+            if (dto.farm !== 0) {
+              return <Image
+                removeFromFavoritesList={this.removeFromFavoritesList}
+                addToFavoritesList={this.addToFavoritesList}
+                onDrop={() => this.setState({ disableHover: false })}
+                disableHover={this.state.disableHover}
+                onGalleryDrag={this.handleGalleryDrag}
+                onGalleryDragEnter={this.handleGalleryDragEnter}
+                index={index}
+                key={'image-' + dto.id + index}
+                dto={dto}
+                onDelete={this.handleDelete}
+                size={this.state.imageSize}
+                url={url}
+              />;
+            }
           })
         }
         {

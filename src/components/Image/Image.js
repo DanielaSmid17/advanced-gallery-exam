@@ -21,10 +21,6 @@ class Image extends React.Component {
     };
   }
 
-  urlFromDto(dto) {
-    return `https://farm${dto.farm}.staticflickr.com/${dto.server}/${dto.id}_${dto.secret}.jpg`;
-  }
-
   handleExpandClick = () => {
     this.setState({ openModal: true })
   }
@@ -68,7 +64,9 @@ class Image extends React.Component {
     this.setState({ isFavorite: !this.state.isFavorite })
   }
 
+
   render() {
+
     return (
       <div
         data-position={this.props.index}
@@ -80,7 +78,7 @@ class Image extends React.Component {
         onDrop={this.handleDrop}
         style={{
           transform: `rotate(${this.state.imageRotation}deg)`,
-          backgroundImage: `url(${this.urlFromDto(this.props.dto)})`,
+          backgroundImage: `url(${this.props.url})`,
           width: this.props.size + 'px',
           height: this.props.size + 'px',
           justifyItems: 'center',
@@ -97,7 +95,7 @@ class Image extends React.Component {
             style={this.state.isFavorite ? { color: "red" } : { color: "#ccc" }}
             onClick={this.handleFavoriteClick} />}
         </div>
-        <ImageModal isOpen={this.state.openModal} onClose={this.handleModalClose} onRequestClose={this.handleRequestModalClose} imgUrl={this.urlFromDto(this.props.dto)} title={this.props.dto.title} />
+        <ImageModal isOpen={this.state.openModal} onClose={this.handleModalClose} onRequestClose={this.handleRequestModalClose} imgUrl={this.props.url} title={this.props.dto.title} />
       </div >
     );
   }
