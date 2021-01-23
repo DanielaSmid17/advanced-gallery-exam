@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import FontAwesome from 'react-fontawesome';
 import './Image.scss';
 import ImageModal from './ImageModal'
-
 class Image extends React.Component {
+
   static propTypes = {
     dto: PropTypes.object,
     galleryWidth: PropTypes.number
@@ -16,7 +16,8 @@ class Image extends React.Component {
       openModal: false,
       imageRotation: 0,
       buttonsRotation: 0,
-      borderColor: '#FFFFFF'
+      borderColor: '#FFFFFF',
+      isFavorite: this.props.isInFavoritesList,
     };
   }
 
@@ -53,11 +54,19 @@ class Image extends React.Component {
     console.log('after', this.state.imageClassName);
   }
 
-  handleDrop = (e) => {
+  handleDrop = () => {
     this.props.onDrop()
     this.setState({ borderColor: "#FFFFFF" })
   }
 
+  handleFavoriteClick = () => {
+    if (!this.state.isFavorite)
+      this.props.addToFavoritesList(this.props.dto)
+    else
+      this.props.removeFromFavoritesList(this.props.dto)
+
+    this.setState({ isFavorite: !this.state.isFavorite })
+  }
 
   render() {
     return (
@@ -80,8 +89,13 @@ class Image extends React.Component {
       >
         <div style={{ transform: `rotate(${this.state.buttonsRotation}deg)` }}>
           <FontAwesome className="image-icon" name="sync-alt" title="rotate" onClick={this.handleFlipButton} />
-          <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.onDelete(this.props.dto)} />
+          {!this.props.isInFavoritesList && <FontAwesome className="image-icon" name="trash-alt" title="delete" onClick={() => this.props.onDelete(this.props.dto)} />}
           <FontAwesome className="image-icon" name="expand" title="expand" onClick={this.handleExpandClick} />
+          {!this.props.isInFavoritesList && < FontAwesome className="image-icon"
+            name="heart"
+            title="favorite"
+            style={this.state.isFavorite ? { color: "red" } : { color: "#ccc" }}
+            onClick={this.handleFavoriteClick} />}
         </div>
         <ImageModal isOpen={this.state.openModal} onClose={this.handleModalClose} onRequestClose={this.handleRequestModalClose} imgUrl={this.urlFromDto(this.props.dto)} title={this.props.dto.title} />
       </div >

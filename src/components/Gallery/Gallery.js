@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import Image from '../Image';
+import FontAwesome from 'react-fontawesome';
 import './Gallery.scss';
 
 class Gallery extends React.Component {
@@ -18,7 +19,8 @@ class Gallery extends React.Component {
       imageSize: 200,
       draggedImage: {},
       dragEnterIndex: null,
-      disableHover: false
+      disableHover: false,
+      favoriteImages: [],
     };
   }
 
@@ -56,7 +58,9 @@ class Gallery extends React.Component {
     const imagesList = [...this.state.images]
     const index = imagesList.indexOf(dto)
     imagesList.splice(index, 1)
+    this.removeFromFavoritesList(dto)
     this.setState({ images: imagesList })
+
   }
 
   scrollListener = () => {
@@ -97,13 +101,52 @@ class Gallery extends React.Component {
     }
   }
 
+  addToFavoritesList = (dto) => {
+    const favoritesCopy = [...this.state.favoriteImages]
+    if (!favoritesCopy.includes(dto))
+      favoritesCopy.push(dto)
+    this.setState({ favoriteImages: favoritesCopy })
+  }
+
+  removeFromFavoritesList = (dto) => {
+    const favoritesCopy = [...this.state.favoriteImages]
+    let index = favoritesCopy.indexOf(dto)
+    if (index >= 0) {
+      favoritesCopy.splice(index, 1)
+      this.setState({ favoriteImages: favoritesCopy })
+    }
+  }
 
   render() {
     return (
       <div className="gallery-root" id='gallery' >
+        {this.state.favoriteImages.length > 0 &&
+          <div className='favorites-gallery'>
+            <h3>< FontAwesome name="heart" /> Your Favorite Pictures</h3>
+            {this.state.favoriteImages.map((dto, index) => {
+              return <Image
+                isInFavoritesList
+                removeFromFavoritesList={this.removeFromFavoritesList}
+                addToFavoritesList={this.addToFavoritesList}
+                onDrop={() => this.setState({ disableHover: false })}
+                disableHover={this.state.disableHover}
+                onGalleryDrag={this.handleGalleryDrag}
+                onGalleryDragEnter={this.handleGalleryDragEnter}
+                index={index}
+                key={'image-' + dto.id + index}
+                dto={dto}
+                onDelete={this.handleDelete}
+                size={this.state.imageSize}
+              />
+            })}
+          </div>
+        }
+        <h3>Main Gallery</h3>
         {
           this.state.images.map((dto, index) => {
             return <Image
+              removeFromFavoritesList={this.removeFromFavoritesList}
+              addToFavoritesList={this.addToFavoritesList}
               onDrop={() => this.setState({ disableHover: false })}
               disableHover={this.state.disableHover}
               onGalleryDrag={this.handleGalleryDrag}
@@ -121,7 +164,7 @@ class Gallery extends React.Component {
             && (this.state.images.length == this.state.totalPhotos))
           && <h4>You've reached the end of the {this.props.tag} search!</h4>
         }
-      </div>
+      </div >
     );
   }
 }
