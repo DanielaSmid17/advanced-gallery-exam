@@ -3,6 +3,17 @@ import Modal from 'react-modal'
 import './ImageModal.css'
 
 export default class ImageModal extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+            colors: null,
+        };
+    }
+
+    handleClick = (e) => {
+        this.setState({ colors: e.target.value })
+
+    }
 
 
     render() {
@@ -15,7 +26,12 @@ export default class ImageModal extends React.Component {
                 </div>
                 <div className='modal-content'>
                     <h3 className='title'>{title}</h3>
-                    <img className='img' src={imgUrl} />
+                    <div className='color-btns'>
+                        <button value={null} onClick={this.handleClick}>Original</button>
+                        <button value="blacknwhite" onClick={this.handleClick}>Black & white</button>
+                        <button value="sepia" onClick={this.handleClick}>Sepia</button>
+                    </div>
+                    <img className={`img ${this.state.colors}`} src={imgUrl} />
                 </div>
             </Modal>
         )

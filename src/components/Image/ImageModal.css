@@ -10,7 +10,7 @@
 .modal {
     padding: .5rem;
     width: 600px;
-    height: 400px;
+    height: 450px;
     background-color: black;
     margin-left: 30%;
     margin-top: 3%;
@@ -23,6 +23,41 @@
     justify-items: center;
 }
 
+.sepia{
+    filter: sepia(100%)
+}
+
+.blacknwhite {
+    filter: grayscale(100%)
+}
+
 .modal-content{
     margin-left: 10%;
+}
+
+.color-btns {
+    display: flex;
+    margin-bottom: 1rem
+}
+
+.color-btns button {
+    background: #222;
+    height: 30px;
+    border: none;
+    border-radius: 10px;
+    color: #eee;
+    font-size: 22px;
+    transition: 1s;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding-top: 5px;
+    margin: 0 .5rem;
+
+}
+
+.color-btns button:hover {
+    background-color: darkgray;
 }
